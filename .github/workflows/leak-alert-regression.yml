@@ -31,8 +31,17 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
 
+      - name: Check endpoint availability
+        id: endpoint
+        continue-on-error: true
+        env:
+          TEST_RESULTS_DIR: test-results-ci
+          SANITIZED_RESULTS_DIR: test-results-ci-sanitized
+        run: node scripts/check_endpoint.js
+
       - name: Run critical regression
         id: regression
+        if: steps.endpoint.outcome == 'success'
         continue-on-error: true
         env:
           TEST_USERNAME: ${{ secrets.LEAK_ALERT_USERNAME }}
@@ -46,13 +55,22 @@ jobs:
             flows/00-critical-regression.yaml \
             --test-output-dir test-results-ci
 
+      - name: Prepare sanitized diagnostic summary
+        if: always()
+        env:
+          TEST_RESULTS_DIR: test-results-ci
+          TEST_STATUS: ${{ steps.endpoint.outcome == 'success' && steps.regression.outcome == 'success' && 'PASSED' || 'FAILED' }}
+          TEST_USERNAME: ${{ secrets.LEAK_ALERT_USERNAME }}
+          TEST_PASSWORD: ${{ secrets.LEAK_ALERT_PASSWORD }}
+        run: node scripts/prepare_results.js test-results-ci
+
       - name: Upload Maestro artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: maestro-test-results-${{ github.run_id }}
           path: |
-            test-results-ci
+            test-results-ci-sanitized
             screenshots
           if-no-files-found: warn
           retention-days: 30
@@ -61,9 +79,10 @@ jobs:
         if: always()
         env:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
-          TEST_STATUS: ${{ steps.regression.outcome == 'success' && 'PASSED' || 'FAILED' }}
+          TEST_RESULTS_DIR: test-results-ci-sanitized
+          TEST_STATUS: ${{ steps.endpoint.outcome == 'success' && steps.regression.outcome == 'success' && 'PASSED' || 'FAILED' }}
         run: node scripts/notify_teams.js
 
       - name: Mark workflow failed
-        if: steps.regression.outcome == 'failure'
+        if: steps.endpoint.outcome == 'failure' || steps.regression.outcome == 'failure'
         run: exit 1

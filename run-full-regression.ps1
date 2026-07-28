@@ -15,8 +15,14 @@ maestro test `
 
 $testExitCode = $LASTEXITCODE
 $env:TEST_STATUS = if ($testExitCode -eq 0) { "PASSED" } else { "FAILED" }
+$env:TEST_RESULTS_DIR = "test-results"
+$env:SANITIZED_RESULTS_DIR = "test-results-sanitized"
+$env:TEST_USERNAME = $env:LEAK_ALERT_USERNAME
+$env:TEST_PASSWORD = $env:LEAK_ALERT_PASSWORD
 
 try {
+    node scripts/prepare_results.js test-results
+    $env:TEST_RESULTS_DIR = "test-results-sanitized"
     node scripts/notify_teams.js
 }
 catch {

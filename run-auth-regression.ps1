@@ -29,8 +29,14 @@ foreach ($flow in $flows) {
 
 $testExitCode = if ($failedFlows.Count -eq 0) { 0 } else { 1 }
 $env:TEST_STATUS = if ($testExitCode -eq 0) { "PASSED" } else { "FAILED" }
+$env:TEST_RESULTS_DIR = "test-results-auth"
+$env:SANITIZED_RESULTS_DIR = "test-results-auth-sanitized"
+$env:TEST_USERNAME = $env:LEAK_ALERT_USERNAME
+$env:TEST_PASSWORD = $env:LEAK_ALERT_PASSWORD
 
 try {
+    node scripts/prepare_results.js test-results-auth
+    $env:TEST_RESULTS_DIR = "test-results-auth-sanitized"
     node scripts/notify_teams.js
 }
 catch {

@@ -78,3 +78,8 @@ Configure these GitHub repository secrets:
 
 Failed runs upload Maestro screenshots and command artifacts, post an Adaptive
 Card to Microsoft Teams, and leave the workflow in a failed state.
+
+Teams diagnostics include the failed flow, exact step, severity, confirmed or
+suspected cause, failure message, and a direct CI-run link. CI also performs an
+endpoint availability check before launching Maestro. Uploaded text artifacts
+are sanitized to remove configured usernames, passwords, and webhook values.

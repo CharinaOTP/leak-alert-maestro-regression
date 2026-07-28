@@ -1,3 +1,6 @@
+const fs = require("fs");
+const path = require("path");
+
 const webhook = process.env.TEAMS_WEBHOOK_URL;
 if (!webhook) {
   console.log("TEAMS_WEBHOOK_URL is not configured; notification skipped.");
@@ -12,6 +15,12 @@ const runUrl =
   server && process.env.GITHUB_REPOSITORY && process.env.GITHUB_RUN_ID
     ? `${server}/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}`
     : "";
+const resultsDir = process.env.TEST_RESULTS_DIR || "test-results";
+const summaryPath = path.join(resultsDir, "test-summary.json");
+const summary = fs.existsSync(summaryPath)
+  ? JSON.parse(fs.readFileSync(summaryPath, "utf8"))
+  : null;
+const failure = summary?.primaryFailure;
 
 const payload = {
   type: "message",
@@ -38,6 +47,15 @@ const payload = {
               { title: "Run ID", value: runId },
               { title: "Branch", value: process.env.GITHUB_REF_NAME || "local" },
               { title: "Triggered by", value: process.env.GITHUB_ACTOR || "scheduler" },
+              { title: "Failed checks", value: String(summary?.failedChecks || 0) },
+              ...(failure
+                ? [
+                    { title: "Failed flow", value: failure.flow },
+                    { title: "Failed step", value: failure.step },
+                    { title: "Severity", value: failure.severity },
+                    { title: "Diagnosis", value: `${failure.confidence}: ${failure.diagnosis}` },
+                  ]
+                : []),
             ],
           },
           {
@@ -46,7 +64,7 @@ const payload = {
             text:
               status === "PASSED"
                 ? "All critical Leak Alert web scenarios passed."
-                : "One or more critical scenarios failed. Review the uploaded Maestro screenshots and command artifacts.",
+                : `Reason: ${failure?.reason || "One or more critical scenarios failed."}\n\nReview the uploaded screenshots, UI hierarchy, and sanitized command artifacts.`,
           },
         ],
         actions: runUrl
