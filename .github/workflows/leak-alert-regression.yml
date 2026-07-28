@@ -40,7 +40,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p test-results-ci
-          maestro test \
+          xvfb-run --auto-servernum maestro test \
             -e TEST_USERNAME="$TEST_USERNAME" \
             -e TEST_PASSWORD="$TEST_PASSWORD" \
             flows/00-critical-regression.yaml \
