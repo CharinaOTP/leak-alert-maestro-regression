@@ -1,0 +1,17 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-OPS-006 Dispatched leak end-to-end verification
+tags:
+  - regression
+  - operations
+  - dispatch
+  - e2e
+  - persistence
+---
+- runFlow:
+    file: 07-dispatched-report-status.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- assertVisible: "202607C949"
+- assertVisible: "Charina Mae Castillano"
+- takeScreenshot: screenshots/dispatch-e2e-persisted

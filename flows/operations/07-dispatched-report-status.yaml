@@ -1,0 +1,29 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-OPS-007 Dispatched report status persistence
+tags:
+  - regression
+  - operations
+  - dispatch
+  - persistence
+  - critical
+---
+- runFlow:
+    file: 01-leak-reports-list.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn: "Customer Reports"
+- assertVisible: "Leak Detection"
+- assertVisible: "Dispatched"
+- assertVisible: "Repaired Leaks"
+- assertVisible: "Repair Scheduled"
+- assertVisible: "Repair Turn-over"
+- assertVisible: "Leak After the Meter"
+- assertVisible: "Leak Not Found"
+- takeScreenshot: screenshots/operations-status-options
+- tapOn: "Dispatched"
+- extendedWaitUntil:
+    visible: "202607C949"
+    timeout: 30000
+- assertVisible: "Charina Mae Castillano"
+- takeScreenshot: screenshots/dispatched-report-persistence

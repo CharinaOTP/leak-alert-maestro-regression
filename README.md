@@ -86,6 +86,12 @@ regression verifies the existing QA record and does not create duplicates.
 The Operations module is the supported route for opening Report Details, Leak
 Images, and Reported Location.
 
+Dispatch fixture state:
+
+- `2026072C26` remains a Customer Report for repeatable eligibility checks.
+- `202607C949` was dispatched to active repair crew `CT-01` and is used for
+  repeatable dispatched-status persistence checks.
+
 Set `LEAK_ALERT_USERNAME`, `LEAK_ALERT_PASSWORD`, and `TEAMS_WEBHOOK_URL` as
 local environment variables. The runner sends a Teams message for both passing
 and failing runs.

@@ -1,0 +1,18 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-OPS-004 Open dispatch action
+tags:
+  - regression
+  - operations
+  - dispatch
+---
+- runFlow:
+    file: 01-leak-reports-list.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- assertVisible: "2026072C26"
+- tapOn:
+    point: 760,421
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: screenshots/operations-dispatch-action

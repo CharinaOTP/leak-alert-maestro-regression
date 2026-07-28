@@ -1,0 +1,22 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-OPS-005 Dispatch crew eligibility validation
+tags:
+  - regression
+  - operations
+  - dispatch
+  - negative
+  - critical
+---
+- runFlow:
+    file: 04-open-dispatch-action.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- assertVisible: "CONTROL - DISPATCH LEAK"
+- assertVisible: "DISPATCH TO REPAIR CREW"
+- assertVisible: "2026072C26"
+- assertVisible: ".*CT-06.*"
+- assertVisible: "Inactive"
+- tapOn:
+    point: 450,580
+- takeScreenshot: screenshots/dispatch-crew-options

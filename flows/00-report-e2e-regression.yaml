@@ -45,6 +45,16 @@ tags:
       TEST_USERNAME: ${TEST_USERNAME}
       TEST_PASSWORD: ${TEST_PASSWORD}
 - runFlow:
+    file: operations/05-dispatch-crew-validation.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
+    file: operations/06-dispatch-leak-e2e.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
     file: maintenance/03-caretaker-search-crew-list.yaml
     env:
       TEST_USERNAME: ${TEST_USERNAME}
