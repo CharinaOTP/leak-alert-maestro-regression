@@ -25,6 +25,16 @@ tags:
       TEST_USERNAME: ${TEST_USERNAME}
       TEST_PASSWORD: ${TEST_PASSWORD}
 - runFlow:
+    file: reports/10-invalid-reference-lookup.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
+    file: reports/11-cancel-report-no-save.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
     file: reports/09-open-report-details.yaml
     env:
       TEST_USERNAME: ${TEST_USERNAME}

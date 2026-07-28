@@ -1,0 +1,30 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-REPORT-011 Cancel report without persistence
+tags:
+  - regression
+  - report
+  - negative
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- assertVisible: "2026072C26"
+- tapOn: "Create a Report"
+- extendedWaitUntil:
+    visible: "Report Details"
+    timeout: 30000
+- swipe:
+    start: 800, 700
+    end: 800, 400
+    duration: 500
+- tapOn: ".*Enter customer name.*"
+- inputText: "QA CANCELLED REPORT"
+- tapOn: "^Cancel$"
+- extendedWaitUntil:
+    visible: "Reports List"
+    timeout: 30000
+- assertNotVisible: "QA CANCELLED REPORT"
+- assertVisible: "2026072C26"
+- takeScreenshot: screenshots/cancel-report-no-save

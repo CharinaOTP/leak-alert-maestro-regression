@@ -1,0 +1,32 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-REPORT-010 Reject invalid reference lookup
+tags:
+  - regression
+  - report
+  - negative
+  - critical
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn: "Create a Report"
+- extendedWaitUntil:
+    visible: "Report Details"
+    timeout: 30000
+- swipe:
+    start: 800, 700
+    end: 800, 400
+    duration: 500
+- tapOn: ".*Select MO Type.*"
+- tapOn: "Report A Leak"
+- tapOn: ".*Account No. / Meter No.*"
+- inputText: "00-000000-0"
+- tapOn: "^Search$"
+- extendedWaitUntil:
+    visible: ".*(Failed to search customer|not found|invalid|no record|does not exist|unable).*"
+    timeout: 30000
+- takeScreenshot: screenshots/invalid-reference-rejected
+- tapOn: "^Close$"
+- assertVisible: "00-000000-0"
