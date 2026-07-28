@@ -1,0 +1,4 @@
+test-results*/
+screenshots/
+.maestro/
+*.log

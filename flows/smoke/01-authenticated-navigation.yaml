@@ -1,0 +1,16 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: Verify authenticated Leak Alert web navigation
+tags:
+  - regression
+  - smoke
+  - web
+---
+- assertVisible:
+    text: ".*(Dashboard|Leak Alert|Leak Reports|Reports|Map).*"
+- tapOn:
+    text: ".*(Leak Reports|Reports|Leak Alert).*"
+    optional: true
+- extendedWaitUntil:
+    visible: ".*(Leak|Report|Map|Search|Status).*"
+    timeout: 30000
+- takeScreenshot: screenshots/03-authenticated-leak-page

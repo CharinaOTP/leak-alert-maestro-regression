@@ -1,0 +1,16 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-AUTH-003 Require login credentials
+tags:
+  - regression
+  - auth
+  - critical
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "^Login$"
+    timeout: 30000
+- tapOn: "^Log In$"
+- assertVisible: "^Login$"
+- assertNotVisible:
+    text: ".*(Dashboard|Reports List|Create a Report).*"
+- takeScreenshot: screenshots/auth-required-fields

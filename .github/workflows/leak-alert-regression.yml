@@ -1,0 +1,69 @@
+name: Leak Alert Critical Regression
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Daily at 06:00 Asia/Manila (22:00 UTC on the previous day).
+    - cron: "0 22 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  maestro-web:
+    name: Maestro Chromium regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Maestro
+        shell: bash
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+      - name: Run critical regression
+        id: regression
+        continue-on-error: true
+        env:
+          TEST_USERNAME: ${{ secrets.LEAK_ALERT_USERNAME }}
+          TEST_PASSWORD: ${{ secrets.LEAK_ALERT_PASSWORD }}
+        shell: bash
+        run: |
+          mkdir -p test-results-ci
+          maestro test \
+            -e TEST_USERNAME="$TEST_USERNAME" \
+            -e TEST_PASSWORD="$TEST_PASSWORD" \
+            flows/00-critical-regression.yaml \
+            --test-output-dir test-results-ci
+
+      - name: Upload Maestro artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-test-results-${{ github.run_id }}
+          path: |
+            test-results-ci
+            screenshots
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Notify Microsoft Teams on failure
+        if: steps.regression.outcome == 'failure'
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          TEST_STATUS: FAILED
+        run: node scripts/notify_teams.js
+
+      - name: Mark workflow failed
+        if: steps.regression.outcome == 'failure'
+        run: exit 1

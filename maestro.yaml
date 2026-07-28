@@ -1,0 +1,6 @@
+flows:
+  - "flows/**/*.yaml"
+excludeTags:
+  - helper
+executionOrder:
+  continueOnFailure: false

@@ -1,0 +1,28 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: Login to Leak Alert web portal
+tags:
+  - regression
+  - auth
+  - web
+---
+- launchApp
+- extendedWaitUntil:
+    visible: ".*(Login|Log in|Sign in).*"
+    timeout: 30000
+- tapOn:
+    text: ".*(Username|User Name|Employee ID|Account Number|Email).*"
+- inputText: ${TEST_USERNAME}
+- hideKeyboard
+- tapOn:
+    text: ".*Password.*"
+- inputText: ${TEST_PASSWORD}
+- hideKeyboard
+- tapOn:
+    text: "^Log In$"
+    retryTapIfNoChange: true
+- extendedWaitUntil:
+    visible: ".*(Dashboard|Leak Alert|Leak Reports|Reports|Map|Logout).*"
+    timeout: 45000
+- assertNotVisible:
+    text: ".*(Invalid username|Invalid password|Login failed|Unauthorized).*"
+- takeScreenshot: screenshots/02-login-success

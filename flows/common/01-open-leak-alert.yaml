@@ -1,0 +1,11 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: Open Leak Alert development portal
+tags:
+  - helper
+  - web
+---
+- launchApp
+- extendedWaitUntil:
+    visible: ".*(Login|Log in|Sign in|Leak Alert|Leak Report).*"
+    timeout: 45000
+- takeScreenshot: screenshots/01-portal-opened

@@ -1,0 +1,14 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: Leak Alert Web Full Regression
+tags:
+  - regression
+  - web
+---
+- runFlow:
+    file: common/01-open-leak-alert.yaml
+- runFlow:
+    file: auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow: smoke/01-authenticated-navigation.yaml

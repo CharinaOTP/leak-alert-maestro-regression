@@ -1,0 +1,23 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: Leak Alert Critical Regression
+tags:
+  - regression
+  - critical
+---
+- runFlow: auth/02-invalid-login.yaml
+- runFlow: auth/03-required-login-fields.yaml
+- runFlow:
+    file: dashboard/01-dashboard-integrity.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
+    file: reports/02-create-report-form-integrity.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
+    file: auth/04-logout.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}

@@ -1,0 +1,23 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-AUTH-002 Reject invalid credentials
+tags:
+  - regression
+  - auth
+  - critical
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "^Login$"
+    timeout: 30000
+- tapOn:
+    text: ".*(Username|User Name|Employee ID|Account Number|Email).*"
+- inputText: "INVALID-QA-USER"
+- tapOn:
+    text: ".*Password.*"
+- inputText: "invalid-password"
+- tapOn: "^Log In$"
+- extendedWaitUntil:
+    visible: ".*(Invalid|incorrect|failed|unauthorized|not found).*"
+    timeout: 30000
+- assertVisible: "^Login$"
+- takeScreenshot: screenshots/auth-invalid-credentials

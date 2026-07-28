@@ -1,0 +1,25 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-REPORT-002 Create Report critical fields
+tags:
+  - regression
+  - report
+  - critical
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn: "Create a Report"
+- extendedWaitUntil:
+    visible: "Report Details"
+    timeout: 30000
+- assertVisible: "Search Address"
+- assertVisible:
+    text: ".*Search location.*"
+- assertVisible: "Report Information"
+- assertVisible:
+    text: ".*TYPE OF REPORT.*"
+- assertVisible:
+    text: ".*Select MO Type.*"
+- takeScreenshot: screenshots/create-report-required-fields

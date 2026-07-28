@@ -1,0 +1,18 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-AUTH-004 Logout terminates session
+tags:
+  - regression
+  - auth
+  - critical
+---
+- runFlow:
+    file: 01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn: "Log out"
+- extendedWaitUntil:
+    visible: "^Login$"
+    timeout: 30000
+- assertNotVisible: "Create a Report"
+- takeScreenshot: screenshots/logout-success

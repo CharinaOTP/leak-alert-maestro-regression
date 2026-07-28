@@ -1,0 +1,26 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-DASH-001 Dashboard critical information
+tags:
+  - regression
+  - dashboard
+  - critical
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- assertVisible: "Leak Reporting System"
+- assertVisible: "Dispatched"
+- assertVisible: "Total Reports"
+- assertVisible: "Pending Dispatch"
+- assertVisible: "Reports List"
+- assertVisible: "Create a Report"
+- assertVisible: "Reference No."
+- assertVisible: "Reporter Name"
+- assertVisible: "Leak Type"
+- assertVisible: "Location"
+- assertVisible: "Remarks"
+- assertVisible: "Date Reported"
+- assertVisible: "Log out"
+- takeScreenshot: screenshots/dashboard-integrity
