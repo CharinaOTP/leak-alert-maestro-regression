@@ -1,5 +1,11 @@
 # DCWD Leak Alert Chrome Web Regression
 
+## Confirmed defects
+
+See [the QA defect report](docs/DEFECT_REPORT.md) for severity, affected
+references, exact reproduction steps, expected and actual behavior, and the
+corresponding Maestro automation flows.
+
 This Maestro suite opens the Leak Alert development portal in Android Chrome:
 
 `https://dev-myportal.davao-water.gov.ph/gis/leak`
