@@ -57,14 +57,21 @@ const payload = {
   ],
 };
 
-const response = await fetch(webhook, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(payload),
-});
+async function sendNotification() {
+  const response = await fetch(webhook, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
 
-if (!response.ok) {
-  throw new Error(`Teams webhook returned HTTP ${response.status}: ${await response.text()}`);
+  if (!response.ok) {
+    throw new Error(`Teams webhook returned HTTP ${response.status}: ${await response.text()}`);
+  }
+
+  console.log("Teams notification sent.");
 }
 
-console.log("Teams notification sent.");
+sendNotification().catch((error) => {
+  console.error(error.message);
+  process.exit(1);
+});

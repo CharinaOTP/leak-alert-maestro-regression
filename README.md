@@ -55,6 +55,16 @@ maestro test `
   --test-output-dir test-results-critical
 ```
 
+Run all authentication tests locally and notify Teams:
+
+```powershell
+.\run-auth-regression.ps1
+```
+
+Set `LEAK_ALERT_USERNAME`, `LEAK_ALERT_PASSWORD`, and `TEAMS_WEBHOOK_URL` as
+local environment variables. The runner sends a Teams message for both passing
+and failing runs.
+
 ## CI/CD and Microsoft Teams
 
 The GitHub Actions workflow runs daily at 06:00 Asia/Manila and also supports
