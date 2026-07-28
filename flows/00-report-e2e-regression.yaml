@@ -45,6 +45,26 @@ tags:
       TEST_USERNAME: ${TEST_USERNAME}
       TEST_PASSWORD: ${TEST_PASSWORD}
 - runFlow:
+    file: maintenance/03-caretaker-search-crew-list.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
+    file: maintenance/04-leak-detection-search-designation.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
+    file: admin/02-employee-search.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
+    file: reports/13-dar-navigation.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
     file: operations/02-open-report-action.yaml
     env:
       TEST_USERNAME: ${TEST_USERNAME}

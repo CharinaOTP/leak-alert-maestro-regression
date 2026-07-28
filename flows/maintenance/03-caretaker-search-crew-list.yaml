@@ -1,0 +1,21 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-MAINT-003 Caretaker search and crew list
+tags:
+  - regression
+  - maintenance
+  - search
+---
+- runFlow:
+    file: 01-caretaker-crew.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn: "Search caretaker"
+- inputText: "CT-01"
+- assertVisible: "CT-01"
+- assertVisible: "Yes"
+- assertNotVisible: "CT-03"
+- tapOn: "View Crew List"
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: screenshots/maintenance-caretaker-crew-list

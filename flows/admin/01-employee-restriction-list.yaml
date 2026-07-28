@@ -1,0 +1,23 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-ADMIN-001 Employee Restriction list
+tags:
+  - regression
+  - administration
+  - permission
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn:
+    point: 36,226
+- extendedWaitUntil:
+    visible: "Employee Restriction"
+    timeout: 30000
+- assertVisible: "Search employees..."
+- assertVisible: "Employee ID"
+- assertVisible: "Name"
+- assertVisible: "Actions"
+- assertVisible: "Refresh"
+- takeScreenshot: screenshots/admin-employee-restriction-list

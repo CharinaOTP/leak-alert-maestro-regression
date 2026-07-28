@@ -1,0 +1,18 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-MAINT-001 Caretaker Crew module
+tags:
+  - regression
+  - maintenance
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn:
+    point: 36,183
+- tapOn: "Caretaker Crew"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: ".*Caretaker.*"
+- takeScreenshot: screenshots/maintenance-caretaker-crew

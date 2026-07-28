@@ -1,0 +1,18 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-MAINT-002 Leak Detection Crew module
+tags:
+  - regression
+  - maintenance
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn:
+    point: 36,183
+- tapOn: "Leak Detection Crew"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: ".*Leak Detection.*"
+- takeScreenshot: screenshots/maintenance-leak-detection-crew

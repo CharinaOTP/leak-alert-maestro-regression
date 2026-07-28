@@ -1,0 +1,22 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-RPT-002 Daily accomplishment report navigation
+tags:
+  - regression
+  - reports
+  - navigation
+---
+- runFlow:
+    file: 12-report-management.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn: "DAR (Per Caretaker)"
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: screenshots/dar-per-caretaker
+- tapOn:
+    point: 36,269
+- tapOn: "DAR (Per Leadman)"
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: screenshots/dar-per-leadman

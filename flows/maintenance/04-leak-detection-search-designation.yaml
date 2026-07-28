@@ -1,0 +1,20 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-MAINT-004 Leak Detection search and designation values
+tags:
+  - regression
+  - maintenance
+  - search
+---
+- runFlow:
+    file: 02-leak-detection-crew.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn: "Search Leak Detection Crew..."
+- inputText: "001362"
+- assertVisible: "001362"
+- assertVisible: "ROEL DAGAHUYA"
+- assertNotVisible: "000651"
+- tapOn:
+    point: 750,322
+- takeScreenshot: screenshots/maintenance-designation-options

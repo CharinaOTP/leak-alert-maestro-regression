@@ -1,0 +1,18 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-ADMIN-002 Employee Restriction search
+tags:
+  - regression
+  - administration
+  - search
+---
+- runFlow:
+    file: 01-employee-restriction-list.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn: "Search employees..."
+- inputText: "002200"
+- assertVisible: "002200"
+- assertVisible: "SHAINA TOMAUB"
+- assertNotVisible: "001965"
+- takeScreenshot: screenshots/admin-employee-search

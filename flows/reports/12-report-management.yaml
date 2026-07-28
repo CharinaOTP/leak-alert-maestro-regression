@@ -1,0 +1,22 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-RPT-001 Report Management catalogue
+tags:
+  - regression
+  - reports
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn:
+    point: 36,269
+- extendedWaitUntil:
+    visible: "Report Management"
+    timeout: 30000
+- assertVisible: "Daily Reports (Repair Crew)"
+- assertVisible: ".*Daily Reports \\(Leak Detection Cr.*"
+- assertVisible: "DAR (Per Caretaker)"
+- assertVisible: "DAR (Per Leadman)"
+- assertVisible: "Search reports..."
+- takeScreenshot: screenshots/report-management-catalogue
