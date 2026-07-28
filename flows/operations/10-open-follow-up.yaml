@@ -1,0 +1,18 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-OPS-010 Follow-up audit persistence
+tags:
+  - regression
+  - operations
+  - follow-up
+  - persistence
+---
+- runFlow:
+    file: 09-open-dispatched-report-details.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn: "Logs History"
+- assertVisible: "Leak Dispatched"
+- assertVisible: ".*202607C949 was dispatched.*"
+- assertVisible: "Follow up"
+- takeScreenshot: screenshots/dispatched-follow-up-audit

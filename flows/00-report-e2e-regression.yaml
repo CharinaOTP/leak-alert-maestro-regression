@@ -55,6 +55,26 @@ tags:
       TEST_USERNAME: ${TEST_USERNAME}
       TEST_PASSWORD: ${TEST_PASSWORD}
 - runFlow:
+    file: operations/08-dispatched-assignment-details.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
+    file: operations/10-open-follow-up.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
+    file: operations/11-operation-type-inventory.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
+    file: operations/12-water-complaint-details.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- runFlow:
     file: maintenance/03-caretaker-search-crew-list.yaml
     env:
       TEST_USERNAME: ${TEST_USERNAME}

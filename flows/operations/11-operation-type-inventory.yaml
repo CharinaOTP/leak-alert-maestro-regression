@@ -1,0 +1,21 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-OPS-011 Operation type inventory
+tags:
+  - regression
+  - operations
+  - inventory
+---
+- runFlow:
+    file: 01-leak-reports-list.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn:
+    point: 350,200
+- assertVisible: "Leak Reports"
+- assertVisible: "Water Complaints"
+- takeScreenshot: screenshots/operation-type-options
+- tapOn: "Water Complaints"
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: screenshots/water-complaints-list

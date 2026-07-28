@@ -1,0 +1,23 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-OPS-009 Open dispatched report details
+tags:
+  - regression
+  - operations
+  - dispatch
+  - detail
+---
+- runFlow:
+    file: 07-dispatched-report-status.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn:
+    point: 784,464
+- extendedWaitUntil:
+    visible: "Reference NO. 202607C949"
+    timeout: 30000
+- assertVisible: "Report Details"
+- assertVisible: "Leak Images"
+- assertVisible: "Reported Location"
+- assertVisible: "Logs History"
+- takeScreenshot: screenshots/dispatched-report-details

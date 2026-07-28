@@ -82,6 +82,10 @@ regression verifies the existing QA record and does not create duplicates.
   but Operations Report Details persist and display `High`.
 - Duplicate protection is absent or ineffective: identical QA submissions
   created references `2026072C26` and `202607C949`.
+- The `+ Follow Up` action records a generic follow-up immediately with no
+  form, reason, confirmation, assigned crew, or supporting evidence.
+- Dispatched reference `202607C949` shows `Dispatch To: N/A`; its audit entry
+  records the dispatch event but omits the selected CT-01 crew.
 
 The Operations module is the supported route for opening Report Details, Leak
 Images, and Reported Location.
@@ -91,6 +95,11 @@ Dispatch fixture state:
 - `2026072C26` remains a Customer Report for repeatable eligibility checks.
 - `202607C949` was dispatched to active repair crew `CT-01` and is used for
   repeatable dispatched-status persistence checks.
+
+Repair scheduling, field completion, repair evidence upload, and turnover are
+crew-role workflows. Completing their mutation tests requires a dedicated
+repair-crew QA login; the current administrator identity provides monitoring,
+dispatch, details, map, images, logs, and follow-up access.
 
 Set `LEAK_ALERT_USERNAME`, `LEAK_ALERT_PASSWORD`, and `TEAMS_WEBHOOK_URL` as
 local environment variables. The runner sends a Teams message for both passing

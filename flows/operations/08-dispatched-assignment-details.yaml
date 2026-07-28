@@ -1,0 +1,21 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-OPS-008 Dispatched audit details
+tags:
+  - regression
+  - operations
+  - dispatch
+  - data-integrity
+  - critical
+---
+- runFlow:
+    file: 09-open-dispatched-report-details.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- assertVisible: "Reference NO. 202607C949"
+- assertVisible: "Logs History"
+- tapOn: "Logs History"
+- extendedWaitUntil:
+    visible: ".*(CT-01|RINCE VERGEL ABAS|dispatch).*"
+    timeout: 30000
+- takeScreenshot: screenshots/dispatched-report-details

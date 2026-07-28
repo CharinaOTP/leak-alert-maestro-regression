@@ -1,0 +1,30 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-OPS-012 Water complaint list and details
+tags:
+  - regression
+  - operations
+  - water-complaints
+  - detail
+---
+- runFlow:
+    file: 11-operation-type-inventory.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- assertVisible: "New Reports"
+- assertVisible: "Reference No."
+- assertVisible: "Complaint Type"
+- assertVisible: "Reporter Name"
+- assertVisible: "Reference Meter"
+- assertVisible: "Location"
+- assertVisible: "Contact No."
+- assertVisible: "Remarks"
+- assertVisible: "Date Reported"
+- assertVisible: "Actions"
+- assertVisible: "202607FB7D"
+- assertVisible: "Low Pressure"
+- tapOn:
+    point: 821,398
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: screenshots/water-complaint-details
