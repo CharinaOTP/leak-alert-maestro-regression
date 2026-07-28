@@ -1,0 +1,28 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-OPS-002 Open operation report action
+tags:
+  - regression
+  - operations
+  - detail
+---
+- runFlow:
+    file: 01-leak-reports-list.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn:
+    point: 795,684
+- extendedWaitUntil:
+    visible: "Reference NO. 2026072C26"
+    timeout: 30000
+- assertVisible: "Report Details"
+- assertVisible: "Leak Images"
+- assertVisible: "Reported Location"
+- assertVisible: "520610245J"
+- assertVisible: "Near Matina Road"
+- assertVisible: "Charina Mae Castillano"
+- assertVisible: "09938834221"
+- assertVisible: "Blow-Off"
+- assertVisible: "^Low$"
+- assertVisible: "Soil"
+- takeScreenshot: screenshots/operations-report-action

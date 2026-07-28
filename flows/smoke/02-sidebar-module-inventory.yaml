@@ -1,0 +1,32 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-NAV-002 Authenticated sidebar module inventory
+tags:
+  - regression
+  - navigation
+  - inventory
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn:
+    point: 36,139
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: screenshots/sidebar-module-2
+- tapOn:
+    point: 36,183
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: screenshots/sidebar-module-3
+- tapOn:
+    point: 36,226
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: screenshots/sidebar-module-4
+- tapOn:
+    point: 36,269
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: screenshots/sidebar-module-5

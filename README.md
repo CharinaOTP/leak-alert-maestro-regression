@@ -76,11 +76,15 @@ The successful record-creation flow is
 creates a real QA record in the development environment. The reusable report
 regression verifies the existing QA record and does not create duplicates.
 
-## Known application defect
+## Known application defects
 
-- `REG-REPORT-009`: selecting submitted reference `2026072C26` does not open a
-  Report Details view. The strict test remains failing so CI reports the missing
-  report-detail workflow until the application is corrected.
+- `REG-OPS-002`: report `2026072C26` was submitted with Leak Pressure `Low`,
+  but Operations Report Details persist and display `High`.
+- Duplicate protection is absent or ineffective: identical QA submissions
+  created references `2026072C26` and `202607C949`.
+
+The Operations module is the supported route for opening Report Details, Leak
+Images, and Reported Location.
 
 Set `LEAK_ALERT_USERNAME`, `LEAK_ALERT_PASSWORD`, and `TEAMS_WEBHOOK_URL` as
 local environment variables. The runner sends a Teams message for both passing
