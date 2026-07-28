@@ -1,0 +1,42 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-REPORT-005 Controlled report dropdown values
+tags:
+  - regression
+  - report
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn: "Create a Report"
+- extendedWaitUntil:
+    visible: "Report Details"
+    timeout: 30000
+- swipe:
+    start: 800, 700
+    end: 800, 400
+    duration: 500
+- tapOn:
+    text: ".*Select MO Type.*"
+- assertVisible: "Report A Leak"
+- assertVisible: "No Water Supply"
+- assertVisible: "Low Pressure"
+- assertVisible: "Water Quality"
+- takeScreenshot: screenshots/create-report-type-options
+- tapOn: "Report A Leak"
+- tapOn: "^- SELECT -$"
+- assertVisible: "Account Holder"
+- assertVisible: "Non Account Holder"
+- takeScreenshot: screenshots/create-report-account-type-options
+- tapOn: "Non Account Holder"
+- swipe:
+    start: 800, 700
+    end: 800, 350
+    duration: 500
+- takeScreenshot: screenshots/create-report-conditional-fields
+- swipe:
+    start: 800, 700
+    end: 800, 350
+    duration: 500
+- takeScreenshot: screenshots/create-report-final-fields

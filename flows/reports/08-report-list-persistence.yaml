@@ -1,0 +1,22 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-REPORT-008 Submitted report appears in Reports List
+tags:
+  - regression
+  - report
+  - persistence
+  - critical
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- assertVisible: "Reports List"
+- assertVisible: "2026072C26"
+- assertVisible: "Charina Mae Castillano"
+- assertVisible: "Blow-Off"
+- assertVisible: ".*P-8 SITIO.*"
+- assertVisible: "For investigation"
+- assertVisible: "10 / page"
+- assertNotVisible: "No leak reports available."
+- takeScreenshot: screenshots/report-list-persistence

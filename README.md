@@ -61,6 +61,27 @@ Run all authentication tests locally and notify Teams:
 .\run-auth-regression.ps1
 ```
 
+Run Dashboard and Report lifecycle regression:
+
+```powershell
+maestro test `
+  -e TEST_USERNAME="$env:LEAK_ALERT_USERNAME" `
+  -e TEST_PASSWORD="$env:LEAK_ALERT_PASSWORD" `
+  flows/00-report-e2e-regression.yaml `
+  --test-output-dir test-results-report-e2e
+```
+
+The successful record-creation flow is
+`flows/reports/07-create-leak-report-e2e.yaml`. Run it deliberately because it
+creates a real QA record in the development environment. The reusable report
+regression verifies the existing QA record and does not create duplicates.
+
+## Known application defect
+
+- `REG-REPORT-009`: selecting submitted reference `2026072C26` does not open a
+  Report Details view. The strict test remains failing so CI reports the missing
+  report-detail workflow until the application is corrected.
+
 Set `LEAK_ALERT_USERNAME`, `LEAK_ALERT_PASSWORD`, and `TEAMS_WEBHOOK_URL` as
 local environment variables. The runner sends a Teams message for both passing
 and failing runs.

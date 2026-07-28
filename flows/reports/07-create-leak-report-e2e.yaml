@@ -1,0 +1,104 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-REPORT-007 Create leak report end to end
+tags:
+  - regression
+  - report
+  - e2e
+  - critical
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn: "Create a Report"
+- extendedWaitUntil:
+    visible: "Report Details"
+    timeout: 30000
+- assertVisible: "Search Address"
+- assertVisible: ".*Search location.*"
+- tapOn: ".*Search location.*"
+- inputText: "Matina"
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot: screenshots/address-autocomplete-options
+- tapOn:
+    point: 300,170
+- extendedWaitUntil:
+    visible: ".*Matina.*"
+    timeout: 30000
+- assertVisible: "Report Information"
+- swipe:
+    start: 800, 700
+    end: 800, 400
+    duration: 500
+- tapOn: ".*Select MO Type.*"
+- assertVisible: "Report A Leak"
+- assertVisible: "No Water Supply"
+- assertVisible: "Low Pressure"
+- assertVisible: "Water Quality"
+- tapOn: "Report A Leak"
+- tapOn: ".*Account No. / Meter No.*"
+- inputText: "18-341274-8"
+- tapOn: "^Search$"
+- extendedWaitUntil:
+    visible: ".*18-341274-8.*"
+    timeout: 30000
+- tapOn: "^- SELECT -$"
+- assertVisible: "Account Holder"
+- assertVisible: "Non Account Holder"
+- tapOn: "Non Account Holder"
+- tapOn: ".*Enter customer name.*"
+- inputText: "Charina Mae Castillano"
+- tapOn: ".*Enter contact number.*"
+- inputText: "09938834221"
+- swipe:
+    start: 800, 700
+    end: 800, 350
+    duration: 500
+- swipe:
+    start: 800, 700
+    end: 800, 350
+    duration: 500
+- assertVisible: ".*520610245J.*"
+- tapOn: ".*Enter landmark.*"
+- inputText: "Near Matina Road"
+- tapOn:
+    point: 260,476
+- assertVisible: "Serviceline"
+- assertVisible: "Mainline"
+- assertVisible: "Blow-Off"
+- assertVisible: "Fire Hydrant"
+- assertVisible: "Air Release"
+- assertVisible: "Valve"
+- tapOn: "Blow-Off"
+- tapOn:
+    point: 650,476
+- assertVisible: "Low"
+- tapOn: "Low"
+- tapOn:
+    point: 260,561
+- assertVisible: "Surface"
+- tapOn: "Surface"
+- tapOn:
+    point: 650,561
+- assertVisible: "Soil"
+- tapOn: "Soil"
+- assertVisible: ".*P-8 SITIO SAKA.*"
+- tapOn: ".*Enter additional remarks.*"
+- inputText: "For investigation"
+- takeScreenshot: screenshots/create-leak-report-completed
+- tapOn: "^OK$"
+- extendedWaitUntil:
+    visible: "Leak report submitted successfully"
+    timeout: 30000
+- assertVisible: "Success"
+- takeScreenshot: screenshots/create-leak-report-success
+- tapOn: "^Close$"
+- extendedWaitUntil:
+    visible: "Reports List"
+    timeout: 30000
+- assertVisible: "Charina Mae Castillano"
+- assertVisible: "Blow-Off"
+- assertVisible: "Near Matina Road"
+- takeScreenshot: screenshots/create-leak-report-persisted

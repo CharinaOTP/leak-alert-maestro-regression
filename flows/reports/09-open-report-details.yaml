@@ -1,0 +1,27 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-REPORT-009 Open submitted report details
+tags:
+  - regression
+  - report
+  - detail
+  - critical
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- assertVisible: "2026072C26"
+- tapOn: "2026072C26"
+- extendedWaitUntil:
+    visible: "^Report Details$"
+    timeout: 30000
+- assertVisible: "Charina Mae Castillano"
+- assertVisible: ".*520610245J.*"
+- assertVisible: "Near Matina Road"
+- assertVisible: "Blow-Off"
+- assertVisible: "Low"
+- assertVisible: "Surface"
+- assertVisible: "Soil"
+- assertVisible: "For investigation"
+- takeScreenshot: screenshots/submitted-report-details

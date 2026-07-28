@@ -1,0 +1,30 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-REPORT-003 Create Report complete form structure
+tags:
+  - regression
+  - report
+---
+- runFlow:
+    file: ../auth/01-login.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- tapOn: "Create a Report"
+- extendedWaitUntil:
+    visible: "Report Details"
+    timeout: 30000
+- swipe:
+    start: 850, 800
+    end: 850, 250
+    duration: 800
+- takeScreenshot: screenshots/create-report-middle
+- swipe:
+    start: 850, 800
+    end: 850, 250
+    duration: 800
+- takeScreenshot: screenshots/create-report-lower
+- swipe:
+    start: 850, 800
+    end: 850, 250
+    duration: 800
+- takeScreenshot: screenshots/create-report-bottom
