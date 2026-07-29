@@ -10,13 +10,13 @@ and Maestro browser authorization tests.
 
 Security recommendation: **Remediation required before production**
 
-Confirmed findings: 5  
-Needs confirmation: 2  
+Confirmed findings: 5
+Needs confirmation: 2
 Positive controls verified: 3
 
 ## SEC-2026-001 — Browser security headers are absent
 
-Severity: High  
+Severity: High
 Status: Confirmed
 
 Steps to reproduce:
@@ -35,7 +35,7 @@ downgrade, MIME confusion, and unnecessary browser capabilities are weakened.
 
 ## SEC-2026-002 — HTTPS canonicalization redirects through HTTP
 
-Severity: Medium  
+Severity: Medium
 Status: Confirmed
 
 Steps to reproduce:
@@ -56,7 +56,7 @@ toward an insecure scheme.
 
 ## SEC-2026-003 — Complete source map is publicly exposed
 
-Severity: High  
+Severity: High
 Status: Confirmed
 
 Steps to reproduce:
@@ -77,7 +77,7 @@ privileged workflows, and implementation weaknesses.
 
 ## SEC-2026-004 — Authentication tokens and user data use localStorage
 
-Severity: High  
+Severity: High
 Status: Confirmed by deployed source
 
 Steps to reproduce:
@@ -97,7 +97,7 @@ user profile. Client-side role and login state are also easier to manipulate.
 
 ## SEC-2026-005 — Server technology versions are disclosed
 
-Severity: Low  
+Severity: Low
 Status: Confirmed
 
 Steps to reproduce:
@@ -112,7 +112,7 @@ Actual: The portal returns `Server: nginx/1.28.0`; the API returns
 
 ## SEC-2026-006 — Login throttling is not externally observable
 
-Severity: Medium  
+Severity: Medium
 Status: Needs confirmation with the identity-service owner
 
 Steps to reproduce:
@@ -131,7 +131,7 @@ protection exists. Higher-volume testing was intentionally not performed.
 
 ## SEC-2026-007 — Public Google Maps API key needs restriction verification
 
-Severity: Medium  
+Severity: Medium
 Status: Needs confirmation
 
 Steps to reproduce:
