@@ -95,10 +95,11 @@ inventory documents calls made by the deployed web client.
 
 ## Availability monitoring
 
-The health monitor uses safe representative probes instead of invoking every
-mutation endpoint. A successful `401` or `403` is considered healthy for a
-protected endpoint because it proves that the API is reachable and enforcing
-authentication.
+The health monitor checks all 44 documented APIs. GET APIs receive safe
+read-only requests with health-check values. Mutation APIs use `OPTIONS`
+preflight requests so monitoring cannot create, update, dispatch, or delete
+records. A successful `401` or `403` is considered reachable for a protected
+endpoint because it proves that the API responded and enforced authentication.
 
 Run locally:
 
@@ -106,10 +107,28 @@ Run locally:
 node scripts/check_api_health.js
 ```
 
-The GitHub Actions workflow runs every 30 minutes and can also be launched
-manually. If one or more services fail, it sends a sanitized Adaptive Card to
-the `TEAMS_WEBHOOK_URL` repository secret and fails the workflow. Successful
-runs do not send Teams noise. Results are retained as an artifact for 14 days.
+The GitHub Actions workflow runs daily at 00:00 UTC (08:00 Asia/Manila) and can
+also be launched manually from the workflow page. Teams receives a daily
+Adaptive Card containing totals and average response time. Failures additionally
+include the API name, status/error, and diagnosed reason. The card contains
+buttons to run the workflow, open this documentation, and view prior runs.
+
+The uploaded JSON artifact contains every API's name, full URL, intended method,
+safe probe method, HTTP status, response time, expected statuses, health state,
+and failure reason. Results are retained for 14 days.
+
+### Initial all-API validation
+
+The July 29, 2026 validation checked all 44 documented APIs. Three deployed
+client routes returned `404 Not Found` and are reported as failures:
+
+- `POST /auth/refresh`
+- `POST /admin/LeakDetection/reports/dar/save-selections`
+- external customer account search on `api-gis.davao-water.gov.ph`
+
+These failures mean the routes used by the deployed client were not found by
+their configured servers. The monitor will continue checking them daily so
+their recovery is visible immediately.
 
 ## Regenerating the inventory
 

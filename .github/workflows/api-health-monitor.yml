@@ -2,7 +2,7 @@ name: Leak Alert API Health Monitor
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 permissions:
@@ -25,6 +25,7 @@ jobs:
         env:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
           API_HEALTH_OUTPUT: test-results/api-health.json
+          API_HEALTH_NOTIFY_SUCCESS: "true"
         run: node scripts/check_api_health.js
 
       - name: Upload sanitized health results
