@@ -280,29 +280,48 @@ async function notifyTeams(result) {
               type: "TextBlock",
               size: "Large",
               weight: "Bolder",
-              color: result.failed === 0 ? "Good" : "Attention",
-              text:
-                result.failed === 0
-                  ? "Leak Alert daily API monitor passed"
-                  : "Leak Alert API availability failure",
+              color: "Good",
+              text: "Leak Alert API Checking",
             },
             {
               type: "TextBlock",
               wrap: true,
-              text: `${result.passed} passed, ${result.failed} failed, ${result.total} APIs checked.`,
+              weight: "Bolder",
+              text: `Summary: ${result.passed} passed, ${result.failed} failed, ${result.total} APIs checked.`,
             },
             ...(failures
-              ? [{ type: "TextBlock", wrap: true, text: failures }]
+              ? [
+                  {
+                    type: "Container",
+                    id: "failedApiDetails",
+                    isVisible: false,
+                    separator: true,
+                    items: [
+                      {
+                        type: "TextBlock",
+                        weight: "Bolder",
+                        text: "Failed APIs",
+                      },
+                      { type: "TextBlock", wrap: true, text: failures },
+                    ],
+                  },
+                ]
               : []),
-            ...detailChunks.map((text, index) => ({
-              type: "TextBlock",
-              wrap: true,
+            {
+              type: "Container",
+              id: "allApiDetails",
+              isVisible: false,
               separator: true,
-              text: `API results ${index * 8 + 1}–${Math.min(
-                index * 8 + 8,
-                result.total
-              )}\n\n${text}`,
-            })),
+              items: detailChunks.map((text, index) => ({
+                type: "TextBlock",
+                wrap: true,
+                separator: index > 0,
+                text: `API results ${index * 8 + 1}–${Math.min(
+                  index * 8 + 8,
+                  result.total
+                )}\n\n${text}`,
+              })),
+            },
             {
               type: "TextBlock",
               wrap: true,
@@ -310,6 +329,20 @@ async function notifyTeams(result) {
             },
           ],
           actions: [
+            ...(failures
+              ? [
+                  {
+                    type: "Action.ToggleVisibility",
+                    title: "View Failed APIs",
+                    targetElements: ["failedApiDetails"],
+                  },
+                ]
+              : []),
+            {
+              type: "Action.ToggleVisibility",
+              title: "View All API Details",
+              targetElements: ["allApiDetails"],
+            },
             {
               type: "Action.OpenUrl",
               title: "Run API Monitor",
