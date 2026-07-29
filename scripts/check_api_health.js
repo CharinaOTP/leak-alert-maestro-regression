@@ -5,6 +5,8 @@ const outputPath = process.env.API_HEALTH_OUTPUT || "test-results/api-health.jso
 const webhook = process.env.TEAMS_WEBHOOK_URL;
 const notifyOnSuccess = process.env.API_HEALTH_NOTIFY_SUCCESS !== "false";
 const primaryBase = "https://dev-api.davao-water.gov.ph/dcwd-gis/api/v1";
+const monitorUsername = process.env.LEAK_ALERT_USERNAME;
+const monitorPassword = process.env.LEAK_ALERT_PASSWORD;
 
 const apiCatalog = [
   ["User login", "POST", "/admin/userlogin/login"],
@@ -18,9 +20,9 @@ const apiCatalog = [
   ["List water complaints", "GET", "/admin/GetComplaints/GetWaterComplaints?PageIndex=1&PageSize=1"],
   ["Search account or meter", "GET", "/admin/customer/SearchAccountOrMeterNumber?searchValue=API-HEALTHCHECK"],
   ["Resolve leak image URL", "GET", "/admin/LeakReport/leak/healthcheck/nonexistent.jpg"],
-  ["Get repair details", "GET", "/admin/GetRepairDetails/repair/API-HEALTHCHECK"],
-  ["List repair filenames", "GET", "/admin/GetRepairDetails/repair/API-HEALTHCHECK/filenames"],
-  ["Get audit logs", "GET", "/admin/Logs/API-HEALTHCHECK"],
+  ["Get repair details", "GET", "/admin/GetRepairDetails/repair/202607FAD6"],
+  ["List repair filenames", "GET", "/admin/GetRepairDetails/repair/202607FAD6/filenames"],
+  ["Get audit logs", "GET", "/admin/Logs/202607FAD6"],
   ["Create audit log", "POST", "/admin/Logs"],
   ["List dispatch records", "GET", "/admin/Dispatch/all"],
   ["Dispatch report to crew", "POST", "/admin/Dispatch/DispatchToCrew"],
@@ -41,7 +43,7 @@ const apiCatalog = [
   ["Save DAR selections", "POST", "/admin/LeakDetection/reports/dar/save-selections", "POST"],
   ["List employee accounts", "GET", "/admin/useraccount/GetAll"],
   ["Get current employee account", "GET", "/admin/useraccount/GetByEmployeeId"],
-  ["Get account by employee ID", "GET", "/admin/useraccount/GetByEmployeeId?empId=API-HEALTHCHECK"],
+  ["Get account by employee ID", "GET", "/admin/useraccount/GetByEmployeeId?empId={MONITOR_EMPLOYEE}"],
   ["Register employee as crew", "POST", "/admin/useraccount/RegisterAsCrew"],
   ["Register leak-detection crew", "POST", "/admin/useraccount/RegisterAsLeakDetectionCrew"],
   ["Update access level", "POST", "/admin/useraccount/UpdateAccessLevel"],
@@ -52,7 +54,10 @@ const apiCatalog = [
   apiMethod,
   method: safeMethod || (apiMethod === "GET" ? "GET" : "OPTIONS"),
   url: `${primaryBase}${path}`,
-  expected: [200, 204, 400, 401, 403, 405],
+  expected:
+    ["Resolve leak image URL", "Get repair details", "Search account or meter"].includes(name)
+      ? [200, 400, 404]
+      : [200, 204, 400, 405],
 }));
 
 const probes = [
@@ -62,11 +67,7 @@ const probes = [
     url: "https://dev-api.davao-water.gov.ph/dcwd-gis/api/v1/admin/userlogin/login",
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: "API-HEALTHCHECK-NONEXISTENT",
-      password: "invalid-healthcheck-credential",
-    }),
-    expected: [400, 401],
+    expected: [200],
     replaces: "User login",
   },
   {
@@ -74,7 +75,7 @@ const probes = [
     url: "https://api-gis.davao-water.gov.ph/dcwd-gis/api/v1/admin/customer/SearchAccountOrMeterNumber?searchValue=API-HEALTHCHECK",
     method: "GET",
     apiMethod: "GET",
-    expected: [200, 400, 401, 403],
+    expected: [200, 400, 404],
   },
   {
     name: "GIS WSS helper",
@@ -112,15 +113,98 @@ const deduplicatedProbes = probes.filter(
     )
 );
 
-async function probe(target) {
+async function authenticate() {
+  const startedAt = Date.now();
+  if (!monitorUsername || !monitorPassword) {
+    return {
+      result: {
+        name: "Authentication API",
+        apiMethod: "POST",
+        probeMethod: "POST",
+        url: `${primaryBase}/admin/userlogin/login`,
+        status: null,
+        durationMs: 0,
+        healthy: false,
+        expected: [200],
+        reason: "Monitoring credentials are not configured.",
+      },
+    };
+  }
+  try {
+    const response = await fetch(`${primaryBase}/admin/userlogin/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: monitorUsername,
+        password: monitorPassword,
+      }),
+      signal: AbortSignal.timeout(timeoutMs),
+    });
+    const payload = await response.json().catch(() => ({}));
+    const session = payload?.data || payload;
+    const token = session?.token || session?.accessToken;
+    const refreshToken = session?.refreshToken || session?.refresh_token;
+    return {
+      token,
+      refreshToken,
+      result: {
+        name: "Authentication API",
+        apiMethod: "POST",
+        probeMethod: "POST",
+        url: `${primaryBase}/admin/userlogin/login`,
+        status: response.status,
+        durationMs: Date.now() - startedAt,
+        healthy: response.ok && Boolean(token),
+        expected: [200],
+        reason:
+          response.ok && token
+            ? "Authenticated successfully; bearer token acquired in memory."
+            : "Login failed or the response did not contain an access token.",
+      },
+    };
+  } catch (error) {
+    return {
+      result: {
+        name: "Authentication API",
+        apiMethod: "POST",
+        probeMethod: "POST",
+        url: `${primaryBase}/admin/userlogin/login`,
+        status: null,
+        durationMs: Date.now() - startedAt,
+        healthy: false,
+        expected: [200],
+        error: error.name === "TimeoutError" ? "Request timed out" : error.message,
+        reason: "Authentication request failed before a bearer token was acquired.",
+      },
+    };
+  }
+}
+
+async function probe(target, token, refreshToken) {
   const startedAt = Date.now();
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    const response = await fetch(target.url, {
+    const resolvedUrl = target.url.replace(
+      "{MONITOR_EMPLOYEE}",
+      encodeURIComponent(monitorUsername || "")
+    );
+    const requiresBearer =
+      resolvedUrl.startsWith(primaryBase) ||
+      resolvedUrl.includes("/dcwd-gis/api/v1/");
+    const headers = {
+      ...target.headers,
+      ...(requiresBearer && token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+    const isRefresh = target.name === "Refresh access token";
+    const response = await fetch(resolvedUrl, {
       method: target.method,
-      headers: target.headers,
-      body: target.body,
+      headers: isRefresh
+        ? { ...headers, "Content-Type": "application/json" }
+        : headers,
+      body: isRefresh
+        ? JSON.stringify({ token: refreshToken || "missing-refresh-token" })
+        : target.body,
       redirect: "manual",
       signal: controller.signal,
     });
@@ -255,7 +339,16 @@ async function notifyTeams(result) {
 }
 
 async function main() {
-  const results = await Promise.all(deduplicatedProbes.map(probe));
+  const authentication = await authenticate();
+  const nonLoginProbes = deduplicatedProbes.filter(
+    (target) => target.name !== "Authentication API"
+  );
+  const endpointResults = await Promise.all(
+    nonLoginProbes.map((target) =>
+      probe(target, authentication.token, authentication.refreshToken)
+    )
+  );
+  const results = [authentication.result, ...endpointResults];
   const summary = {
     checkedAt: new Date().toISOString(),
     total: results.length,

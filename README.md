@@ -146,3 +146,6 @@ node scripts/check_api_health.js
 Configure the existing `TEAMS_WEBHOOK_URL` GitHub Actions secret to receive a
 Teams Adaptive Card after every daily run. Failure cards include the affected
 API name, URL/status evidence in the artifact, response time, and diagnosis.
+The monitor also requires `LEAK_ALERT_USERNAME` and `LEAK_ALERT_PASSWORD`; it
+retrieves a fresh bearer token at the start of every run and never persists or
+prints that token.

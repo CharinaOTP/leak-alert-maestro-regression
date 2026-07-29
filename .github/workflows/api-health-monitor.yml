@@ -24,6 +24,8 @@ jobs:
       - name: Check API availability
         env:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+          LEAK_ALERT_USERNAME: ${{ secrets.LEAK_ALERT_USERNAME }}
+          LEAK_ALERT_PASSWORD: ${{ secrets.LEAK_ALERT_PASSWORD }}
           API_HEALTH_OUTPUT: test-results/api-health.json
           API_HEALTH_NOTIFY_SUCCESS: "true"
         run: node scripts/check_api_health.js

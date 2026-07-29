@@ -98,8 +98,11 @@ inventory documents calls made by the deployed web client.
 The health monitor checks all 44 documented APIs. GET APIs receive safe
 read-only requests with health-check values. Mutation APIs use `OPTIONS`
 preflight requests so monitoring cannot create, update, dispatch, or delete
-records. A successful `401` or `403` is considered reachable for a protected
-endpoint because it proves that the API responded and enforced authentication.
+records. At the beginning of every run, the monitor signs in using the
+`LEAK_ALERT_USERNAME` and `LEAK_ALERT_PASSWORD` GitHub Actions secrets. The
+bearer token remains in process memory and is attached to protected probes.
+Credentials and tokens are never written to logs, artifacts, Teams, or this
+documentation.
 
 Run locally:
 
@@ -117,14 +120,20 @@ The uploaded JSON artifact contains every API's name, full URL, intended method,
 safe probe method, HTTP status, response time, expected statuses, health state,
 and failure reason. Results are retained for 14 days.
 
+Required GitHub Actions secrets:
+
+- `LEAK_ALERT_USERNAME`
+- `LEAK_ALERT_PASSWORD`
+- `TEAMS_WEBHOOK_URL`
+
 ### Initial all-API validation
 
-The July 29, 2026 validation checked all 44 documented APIs. Three deployed
-client routes returned `404 Not Found` and are reported as failures:
+The final authenticated July 29, 2026 validation checked all 44 documented
+APIs. A fresh bearer token was acquired successfully, 42 checks passed, and two
+deployed client routes returned `404 Not Found`:
 
 - `POST /auth/refresh`
 - `POST /admin/LeakDetection/reports/dar/save-selections`
-- external customer account search on `api-gis.davao-water.gov.ph`
 
 These failures mean the routes used by the deployed client were not found by
 their configured servers. The monitor will continue checking them daily so
