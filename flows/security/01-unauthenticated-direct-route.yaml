@@ -1,0 +1,14 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak/home
+name: SEC-AUTHZ-001 Unauthenticated direct route is rejected
+tags:
+  - security
+  - authentication
+  - authorization
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: ".*(Login|Log in).*"
+    timeout: 30000
+- assertNotVisible: "Log out"
+- takeScreenshot: screenshots/security-unauthenticated-direct-route
