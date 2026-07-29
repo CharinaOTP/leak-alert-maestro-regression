@@ -129,3 +129,19 @@ Teams diagnostics include the failed flow, exact step, severity, confirmed or
 suspected cause, failure message, and a direct CI-run link. CI also performs an
 endpoint availability check before launching Maestro. Uploaded text artifacts
 are sanitized to remove configured usernames, passwords, and webhook values.
+
+## API documentation and availability monitor
+
+The deployed-client API inventory is documented in
+[`docs/API_REFERENCE.md`](docs/API_REFERENCE.md). A scheduled workflow checks
+the portal, primary API, authentication boundary, protected report boundary,
+GIS helpers, and address-search dependency every 30 minutes.
+
+Run the same non-destructive checks locally:
+
+```powershell
+node scripts/check_api_health.js
+```
+
+Configure the existing `TEAMS_WEBHOOK_URL` GitHub Actions secret to receive a
+Teams Adaptive Card only when one or more probes fail.
