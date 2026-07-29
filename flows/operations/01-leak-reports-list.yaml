@@ -24,6 +24,8 @@ tags:
 - assertVisible: "Remarks"
 - assertVisible: "Date Reported"
 - assertVisible: "Actions"
+- tapOn: "Search..."
+- inputText: "2026072C26"
 - assertVisible: "2026072C26"
 - assertVisible: "Charina Mae Castillano"
 - takeScreenshot: screenshots/operations-leak-reports-list

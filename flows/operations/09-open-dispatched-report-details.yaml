@@ -12,7 +12,7 @@ tags:
       TEST_USERNAME: ${TEST_USERNAME}
       TEST_PASSWORD: ${TEST_PASSWORD}
 - tapOn:
-    point: 784,464
+    id: "file-search"
 - extendedWaitUntil:
     visible: "Reference NO. 202607C949"
     timeout: 30000

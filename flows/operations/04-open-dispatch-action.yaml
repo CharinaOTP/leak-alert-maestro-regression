@@ -12,7 +12,7 @@ tags:
       TEST_PASSWORD: ${TEST_PASSWORD}
 - assertVisible: "2026072C26"
 - tapOn:
-    point: 760,421
+    id: "truck"
 - waitForAnimationToEnd:
     timeout: 5000
 - takeScreenshot: screenshots/operations-dispatch-action

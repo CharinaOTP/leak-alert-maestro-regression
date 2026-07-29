@@ -12,16 +12,11 @@ tags:
     env:
       TEST_USERNAME: ${TEST_USERNAME}
       TEST_PASSWORD: ${TEST_PASSWORD}
+- eraseText: 10
 - tapOn: "Customer Reports"
-- assertVisible: "Leak Detection"
-- assertVisible: "Dispatched"
-- assertVisible: "Repaired Leaks"
-- assertVisible: "Repair Scheduled"
-- assertVisible: "Repair Turn-over"
-- assertVisible: "Leak After the Meter"
-- assertVisible: "Leak Not Found"
-- takeScreenshot: screenshots/operations-status-options
 - tapOn: "Dispatched"
+- tapOn: "Search..."
+- inputText: "202607C949"
 - extendedWaitUntil:
     visible: "202607C949"
     timeout: 30000

@@ -32,7 +32,9 @@ tags:
     start: 800, 700
     end: 800, 400
     duration: 500
-- tapOn: ".*Select MO Type.*"
+- tapOn:
+    id: "reportType"
+    index: 1
 - assertVisible: "Report A Leak"
 - assertVisible: "No Water Supply"
 - assertVisible: "Low Pressure"
@@ -44,7 +46,9 @@ tags:
 - extendedWaitUntil:
     visible: ".*18-341274-8.*"
     timeout: 30000
-- tapOn: "^- SELECT -$"
+- tapOn:
+    id: "reporterType"
+    index: 1
 - assertVisible: "Account Holder"
 - assertVisible: "Non Account Holder"
 - tapOn: "Non Account Holder"
@@ -64,24 +68,30 @@ tags:
 - tapOn: ".*Enter landmark.*"
 - inputText: "Near Matina Road"
 - tapOn:
-    point: 260,476
+    id: "typeId"
+    index: 1
 - assertVisible: "Serviceline"
 - assertVisible: "Mainline"
 - assertVisible: "Blow-Off"
 - assertVisible: "Fire Hydrant"
 - assertVisible: "Air Release"
 - assertVisible: "Valve"
-- tapOn: "Blow-Off"
 - tapOn:
-    point: 650,476
+    text: "^Blow-Off$"
+    index: 1
+- tapOn:
+    id: "priority"
+    index: 1
 - assertVisible: "Low"
 - tapOn: "Low"
 - tapOn:
-    point: 260,561
+    id: "visibility"
+    index: 1
 - assertVisible: "Surface"
 - tapOn: "Surface"
 - tapOn:
-    point: 650,561
+    id: "coverings"
+    index: 1
 - assertVisible: "Soil"
 - tapOn: "Soil"
 - assertVisible: ".*P-8 SITIO SAKA.*"
@@ -100,5 +110,5 @@ tags:
     timeout: 30000
 - assertVisible: "Charina Mae Castillano"
 - assertVisible: "Blow-Off"
-- assertVisible: "Near Matina Road"
+- assertVisible: ".*P-8 SITIO SAKA.*"
 - takeScreenshot: screenshots/create-leak-report-persisted
