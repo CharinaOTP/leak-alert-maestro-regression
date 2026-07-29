@@ -7,15 +7,11 @@ tags:
   - critical
 ---
 - runFlow:
-    file: ../auth/01-login.yaml
+    file: ../operations/02-open-report-action.yaml
     env:
       TEST_USERNAME: ${TEST_USERNAME}
       TEST_PASSWORD: ${TEST_PASSWORD}
-- assertVisible: "2026072C26"
-- tapOn: "2026072C26"
-- extendedWaitUntil:
-    visible: "^Report Details$"
-    timeout: 30000
+- assertVisible: "Reference NO. 2026072C26"
 - assertVisible: "Charina Mae Castillano"
 - assertVisible: ".*520610245J.*"
 - assertVisible: "Near Matina Road"

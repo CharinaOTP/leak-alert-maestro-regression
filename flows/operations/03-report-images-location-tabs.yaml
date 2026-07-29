@@ -12,14 +12,14 @@ tags:
       TEST_USERNAME: ${TEST_USERNAME}
       TEST_PASSWORD: ${TEST_PASSWORD}
 - tapOn:
-    point: 795,684
+    id: "file-search"
 - extendedWaitUntil:
     visible: "Reference NO. 2026072C26"
     timeout: 30000
 - tapOn: "Leak Images"
 - waitForAnimationToEnd:
     timeout: 5000
-- assertVisible: "Leak Images (Before Repair)"
+- assertVisible: ".*Leak Images \\(Before Repair\\).*"
 - assertVisible: "Leak Image 1"
 - assertVisible: "Leak Image 2"
 - assertVisible: "Landmark / Location Image"

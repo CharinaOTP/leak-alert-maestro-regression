@@ -19,5 +19,4 @@ tags:
 - assertVisible: "Employee ID"
 - assertVisible: "Name"
 - assertVisible: "Actions"
-- assertVisible: "Refresh"
 - takeScreenshot: screenshots/admin-employee-restriction-list

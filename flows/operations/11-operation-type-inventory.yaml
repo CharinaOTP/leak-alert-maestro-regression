@@ -10,12 +10,12 @@ tags:
     env:
       TEST_USERNAME: ${TEST_USERNAME}
       TEST_PASSWORD: ${TEST_PASSWORD}
-- tapOn:
-    point: 350,200
+- eraseText: 10
 - assertVisible: "Leak Reports"
-- assertVisible: "Water Complaints"
-- takeScreenshot: screenshots/operation-type-options
+- tapOn:
+    id: "rc_select_1"
 - tapOn: "Water Complaints"
+- assertVisible: "Water Complaints"
 - waitForAnimationToEnd:
     timeout: 5000
 - takeScreenshot: screenshots/water-complaints-list

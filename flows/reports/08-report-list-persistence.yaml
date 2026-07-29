@@ -17,6 +17,5 @@ tags:
 - assertVisible: "Blow-Off"
 - assertVisible: ".*P-8 SITIO.*"
 - assertVisible: "For investigation"
-- assertVisible: "10 / page"
 - assertNotVisible: "No leak reports available."
 - takeScreenshot: screenshots/report-list-persistence

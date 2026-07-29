@@ -1,0 +1,50 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-OPS-013 Existing dispatched report with images
+tags:
+  - regression
+  - operations
+  - attachments
+  - discovery
+---
+- runFlow:
+    file: 01-leak-reports-list.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- eraseText: 10
+- tapOn:
+    id: "rc_select_2"
+- tapOn: "Dispatched"
+- tapOn: "Search..."
+- inputText: "202607FAD6"
+- extendedWaitUntil:
+    visible: "202607FAD6"
+    timeout: 30000
+- assertVisible: "WITH IMAGE TESTING"
+- tapOn:
+    id: "file-search"
+- extendedWaitUntil:
+    visible: "Reference NO. 202607FAD6"
+    timeout: 30000
+- assertVisible: "Report Details"
+- assertVisible: "WITH IMAGE TESTING"
+- takeScreenshot: screenshots/existing-report-with-images-details
+- tapOn: "Leak Images"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: ".*Leak Images \\(Before Repair\\).*"
+- assertVisible: "Leak Image 1"
+- assertVisible: "Leak Image 2"
+- assertVisible: "Landmark / Location Image"
+- assertNotVisible: "No image available"
+- takeScreenshot: screenshots/existing-report-with-images
+- tapOn: "Reported Location"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: "Reported Location"
+- takeScreenshot: screenshots/existing-report-with-images-location
+- tapOn: "Logs History"
+- waitForAnimationToEnd:
+    timeout: 5000
+- assertVisible: ".*(Report|Leak|202607FAD6).*"
+- takeScreenshot: screenshots/existing-report-with-images-history

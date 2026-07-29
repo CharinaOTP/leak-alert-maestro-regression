@@ -17,9 +17,13 @@ tags:
     start: 800, 700
     end: 800, 400
     duration: 500
-- tapOn: ".*Select MO Type.*"
+- tapOn:
+    id: "reportType"
+    index: 1
 - tapOn: "Report A Leak"
-- tapOn: "^- SELECT -$"
+- tapOn:
+    id: "reporterType"
+    index: 1
 - tapOn: "Non Account Holder"
 - swipe:
     start: 800, 700
@@ -30,5 +34,6 @@ tags:
     end: 800, 350
     duration: 500
 - tapOn:
-    point: 260,476
+    id: "typeId"
+    index: 1
 - takeScreenshot: screenshots/leak-type-options

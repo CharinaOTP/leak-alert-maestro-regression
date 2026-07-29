@@ -1,0 +1,14 @@
+url: https://dev-myportal.davao-water.gov.ph/gis/leak
+name: REG-ADMIN-003 Employee Restriction refresh control
+tags:
+  - regression
+  - administration
+  - suspected-defect
+---
+- runFlow:
+    file: 01-employee-restriction-list.yaml
+    env:
+      TEST_USERNAME: ${TEST_USERNAME}
+      TEST_PASSWORD: ${TEST_PASSWORD}
+- assertVisible: "Refresh"
+- takeScreenshot: screenshots/admin-employee-refresh-control
