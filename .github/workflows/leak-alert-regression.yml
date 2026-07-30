@@ -2,9 +2,6 @@ name: Leak Alert Critical Regression
 
 on:
   workflow_dispatch:
-  schedule:
-    # Daily at 06:00 Asia/Manila (22:00 UTC on the previous day).
-    - cron: "0 22 * * *"
 
 permissions:
   contents: read
@@ -74,14 +71,6 @@ jobs:
             screenshots
           if-no-files-found: warn
           retention-days: 30
-
-      - name: Notify Microsoft Teams with test result
-        if: always()
-        env:
-          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
-          TEST_RESULTS_DIR: test-results-ci-sanitized
-          TEST_STATUS: ${{ steps.endpoint.outcome == 'success' && steps.regression.outcome == 'success' && 'PASSED' || 'FAILED' }}
-        run: node scripts/notify_teams.js
 
       - name: Mark workflow failed
         if: steps.endpoint.outcome == 'failure' || steps.regression.outcome == 'failure'

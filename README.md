@@ -113,8 +113,9 @@ and failing runs.
 
 ## CI/CD and Microsoft Teams
 
-The GitHub Actions workflow runs daily at 06:00 Asia/Manila and also supports
-manual execution.
+The Maestro browser regression is available for manual execution from GitHub
+Actions. Daily monitoring is handled by the API health workflow described
+below.
 
 Configure these GitHub repository secrets:
 
@@ -122,13 +123,13 @@ Configure these GitHub repository secrets:
 - `LEAK_ALERT_PASSWORD`
 - `TEAMS_WEBHOOK_URL`
 
-Failed runs upload Maestro screenshots and command artifacts, post an Adaptive
-Card to Microsoft Teams, and leave the workflow in a failed state.
+Manually triggered failed runs upload Maestro screenshots and command artifacts
+and leave the workflow in a failed state. Maestro regression runs do not send
+Microsoft Teams notifications.
 
-Teams diagnostics include the failed flow, exact step, severity, confirmed or
-suspected cause, failure message, and a direct CI-run link. CI also performs an
-endpoint availability check before launching Maestro. Uploaded text artifacts
-are sanitized to remove configured usernames, passwords, and webhook values.
+CI performs an endpoint availability check before launching Maestro. Uploaded
+text artifacts are sanitized to remove configured usernames, passwords, and
+webhook values.
 
 ## API documentation and availability monitor
 
