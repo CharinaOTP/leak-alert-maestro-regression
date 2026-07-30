@@ -135,7 +135,7 @@ webhook values.
 
 The deployed-client API inventory is documented in
 [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md). A scheduled workflow checks
-all 44 documented API routes and external dependencies daily at 08:00
+all 44 documented API routes and external dependencies daily at 06:00
 Asia/Manila.
 
 Run the same non-destructive checks locally:

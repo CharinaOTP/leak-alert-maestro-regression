@@ -110,7 +110,7 @@ Run locally:
 node scripts/check_api_health.js
 ```
 
-The GitHub Actions workflow runs daily at 00:00 UTC (08:00 Asia/Manila) and can
+The GitHub Actions workflow runs daily at 22:00 UTC (06:00 Asia/Manila the following day) and can
 also be launched manually from the workflow page. Teams receives a daily
 Adaptive Card containing totals and average response time. Failures additionally
 include the API name, status/error, and diagnosed reason. The card contains
