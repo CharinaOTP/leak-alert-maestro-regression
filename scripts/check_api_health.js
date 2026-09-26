@@ -10,7 +10,7 @@ const monitorPassword = process.env.LEAK_ALERT_PASSWORD;
 
 const apiCatalog = [
   ["User login", "POST", "/admin/userlogin/login"],
-  ["Refresh access token", "POST", "/auth/refresh", "POST"],
+  ["Authentication request", "POST", "/auth/request", "POST"],
   ["List all leak reports", "GET", "/admin/GetLeakReports/GetAllLeakReports?PageIndex=1&PageSize=1"],
   ["List filtered leak reports", "GET", "/admin/GetLeakReports/GetLeakReportsFiltered?PageIndex=1&PageSize=1"],
   ["List employee leak reports", "GET", "/admin/GetLeakReports/GetLeakReportsByEmpId"],
@@ -40,7 +40,7 @@ const apiCatalog = [
   ["List leak-detection crew", "GET", "/admin/LeakDetection/GetAllLDCrew"],
   ["Assign leak-detection designation", "PUT", "/admin/LeakDetection/assign-designation"],
   ["Leak-detection reports by reporter", "GET", "/admin/LeakDetection/by-reported-by"],
-  ["Save DAR selections", "POST", "/admin/LeakDetection/reports/dar/save-selections", "POST"],
+  ["Save DAR selections", "POST", "/admin/LeakDetection/reports/dar/save-selections"],
   ["List employee accounts", "GET", "/admin/useraccount/GetAll"],
   ["Get current employee account", "GET", "/admin/useraccount/GetByEmployeeId"],
   ["Get account by employee ID", "GET", "/admin/useraccount/GetByEmployeeId?empId={MONITOR_EMPLOYEE}"],
@@ -180,6 +180,15 @@ async function authenticate() {
   }
 }
 
+async function authenticateWithRetry(maxAttempts = 2) {
+  let authentication;
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    authentication = await authenticate();
+    if (authentication.result.healthy) return authentication;
+  }
+  return authentication;
+}
+
 async function probe(target, token, refreshToken) {
   const startedAt = Date.now();
   const controller = new AbortController();
@@ -196,14 +205,14 @@ async function probe(target, token, refreshToken) {
       ...target.headers,
       ...(requiresBearer && token ? { Authorization: `Bearer ${token}` } : {}),
     };
-    const isRefresh = target.name === "Refresh access token";
+    const isAuthenticationRequest = target.name === "Authentication request";
     const response = await fetch(resolvedUrl, {
       method: target.method,
-      headers: isRefresh
+      headers: isAuthenticationRequest
         ? { ...headers, "Content-Type": "application/json" }
         : headers,
-      body: isRefresh
-        ? JSON.stringify({ token: refreshToken || "missing-refresh-token" })
+      body: isAuthenticationRequest
+        ? JSON.stringify({ username: monitorUsername, password: monitorPassword })
         : target.body,
       redirect: "manual",
       signal: controller.signal,
@@ -372,15 +381,33 @@ async function notifyTeams(result) {
 }
 
 async function main() {
-  const authentication = await authenticate();
+  let authentication = await authenticateWithRetry();
   const nonLoginProbes = deduplicatedProbes.filter(
     (target) => target.name !== "Authentication API"
   );
-  const endpointResults = await Promise.all(
+  let endpointResults = await Promise.all(
     nonLoginProbes.map((target) =>
       probe(target, authentication.token, authentication.refreshToken)
     )
   );
+  const unauthorizedIndexes = endpointResults
+    .map((result, index) => ([401, 403].includes(result.status) ? index : -1))
+    .filter((index) => index >= 0);
+  if (unauthorizedIndexes.length > 0) {
+    const renewedAuthentication = await authenticateWithRetry();
+    if (renewedAuthentication.result.healthy) {
+      authentication = renewedAuthentication;
+      const retriedResults = await Promise.all(
+        unauthorizedIndexes.map((index) =>
+          probe(nonLoginProbes[index], authentication.token, authentication.refreshToken)
+        )
+      );
+      endpointResults = endpointResults.map((result, index) => {
+        const retryIndex = unauthorizedIndexes.indexOf(index);
+        return retryIndex >= 0 ? retriedResults[retryIndex] : result;
+      });
+    }
+  }
   const results = [authentication.result, ...endpointResults];
   const summary = {
     checkedAt: new Date().toISOString(),
